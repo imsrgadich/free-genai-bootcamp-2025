@@ -13,9 +13,10 @@ conda activate text-generation-interface
 ```
 - Install the dependencies
 ```
-pip install -r requirements.yml
+cd opea-comps
+pip install -r text-generation-interface/requirements.yml
 ```
-- Prepare the TGI docker image.
+- Prepare the docker image.
  ```
  # Build the microservice docker
 cd opea-comps
@@ -60,3 +61,36 @@ docker run \
   -e LLM_COMPONENT_NAME=$LLM_COMPONENT_NAME \
   opea/llm-textgen:latest
  ```
+
+ 3. Consume the service. If necessary export the environment variables again, if running in different bash.
+ ```
+ curl http://${host_ip}:${TEXTGEN_PORT}/v1/health_check\
+  -X GET \
+  -H 'Content-Type: application/json'
+ ```
+
+To verify the microservice:
+
+You can set the following model parameters according to your actual needs, such as max_tokens, stream.
+
+The stream parameter determines the format of the data returned by the API. It will return text string with stream=false, return text stream flow with stream=true.
+
+ ```
+ # stream mode
+curl http://${host_ip}:${TEXTGEN_PORT}/v1/chat/completions \
+    -X POST \
+    -d '{"model": "${LLM_MODEL_ID}", "messages": "What is Deep Learning?", "max_tokens":17}' \
+    -H 'Content-Type: application/json'
+
+curl http://${host_ip}:${TEXTGEN_PORT}/v1/chat/completions \
+    -X POST \
+    -d '{"model": "${LLM_MODEL_ID}", "messages": [{"role": "user", "content": "What is Deep Learning?"}], "max_tokens":17}' \
+    -H 'Content-Type: application/json'
+
+#Non-stream mode
+curl http://${host_ip}:${TEXTGEN_PORT}/v1/chat/completions \
+    -X POST \
+    -d '{"model": "${LLM_MODEL_ID}", "messages": "What is Deep Learning?", "max_tokens":17, "stream":false}' \
+    -H 'Content-Type: application/json'
+ ```
+

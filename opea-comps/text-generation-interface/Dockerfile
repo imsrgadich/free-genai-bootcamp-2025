@@ -16,7 +16,8 @@ COPY text-generation-interface /home/user/text-generation-interface
 RUN pip install --no-cache-dir --upgrade pip setuptools && \
     pip install --no-cache-dir -r /home/user/text-generation-interface/requirements.yml
 
-ENV PYTHONPATH=$PYTHONPATH:/home/user
+#ENV PYTHONPATH=$PYTHONPATH:/home/user
+ENV PYTHONPATH=${PYTHONPATH:-/usr/local/lib/python3.11/site-packages}:/home/user
 
 USER user
 

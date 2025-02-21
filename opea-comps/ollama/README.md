@@ -15,10 +15,17 @@ newgrp docker
 # Implementation steps
 - Copy the docker-compose.yml file from the [repo](https://github.com/opea-project/GenAIComps/tree/main/comps/third_parties/ollama/deployment/docker_compose).
 
-- Navigate to docker-compose.yml directory. 
+- Navigate to docker-compose.yml directory and run docker compose based on your type of the machine.
 ```
+# for cpu only machines
 cd opea-comps/ollama/deployment
-LLM_ENDPOINT_PORT=8008 LLM_MODEL_ID="llama3.2:1b" host_ip=$(hostname -I | awk '{print $1}') docker compose up
+LLM_ENDPOINT_PORT=8008 LLM_MODEL_ID="llama3.2:1b" host_ip=$(hostname -I | awk '{print $1}') docker compose -f docker-compose-cpu.yml up
+```
+
+```
+# for nvidia gpu machines
+cd opea-comps/ollama/deployment
+LLM_ENDPOINT_PORT=8008 LLM_MODEL_ID="llama3.2:1b" host_ip=$(hostname -I | awk '{print $1}') docker compose -f docker-compose-nvidia.yml up
 ```
 
 - Pull the model first in the Ollama server by running
