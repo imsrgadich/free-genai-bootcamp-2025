@@ -32,7 +32,7 @@ docker build \
  ```
 export LLM_ENDPOINT_PORT=8008
 export TEXTGEN_PORT=9000
-export host_ip=${hostname -I | awk '{print $2}'}
+export host_ip=$(hostname -I | awk '{print $1}')
 export HF_TOKEN=${HF_TOKEN} 
 export LLM_ENDPOINT="http://${host_ip}:${LLM_ENDPOINT_PORT}"
 export LLM_MODEL_ID="llama3.2:1b"
@@ -40,6 +40,13 @@ export LLM_COMPONENT_NAME="OpeaTextGenService"
  ```
  2. Run the microservice
  ```
+# Stop the existing container
+docker stop llm-textgen-server
+
+# Remove the existing container
+docker rm llm-textgen-server
+
+# Run the microservice
 docker run \
   --name="llm-textgen-server" \
   -p $TEXTGEN_PORT:9000 \

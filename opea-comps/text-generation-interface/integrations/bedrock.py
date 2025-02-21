@@ -9,8 +9,18 @@ import boto3
 from botocore.exceptions import ClientError
 from fastapi.responses import StreamingResponse
 
-from comps import CustomLogger, GeneratedDoc, OpeaComponent, OpeaComponentRegistry, ServiceType
-from comps.cores.proto.api_protocol import ChatCompletionRequest
+from cores.mega.logger import CustomLogger
+from cores.common.component import OpeaComponent, OpeaComponentRegistry
+from cores.mega.constants import (
+    ServiceType,
+)
+from cores.proto.docarray import (
+    LLMParamsDoc,
+    SearchedDoc,
+    GeneratedDoc,
+)
+
+from cores.proto.api_protocol import ChatCompletionRequest
 
 logger = CustomLogger("opea_textgen_bedrock")
 logflag = os.getenv("LOGFLAG", False)

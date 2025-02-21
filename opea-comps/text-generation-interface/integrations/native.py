@@ -22,8 +22,22 @@ import time
 import torch
 from langchain_core.prompts import PromptTemplate
 
-from comps import CustomLogger, GeneratedDoc, OpeaComponent, OpeaComponentRegistry, ServiceType
-from comps.cores.proto.api_protocol import ChatCompletionRequest
+
+from cores.mega.logger import CustomLogger
+
+from cores.proto.docarray import (
+    LLMParamsDoc,
+    SearchedDoc,
+    GeneratedDoc,
+)
+
+from cores.mega.constants import (
+    ServiceType,
+)
+
+from cores.common.component import OpeaComponent, OpeaComponentRegistry
+
+from cores.proto.api_protocol import ChatCompletionRequest
 
 from .template import ChatTemplate
 from .utils import initialize_model

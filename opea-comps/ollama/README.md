@@ -2,7 +2,7 @@
 Ollama allows you to run open-source large language models, such as Llama 3, locally. Ollama bundles model weights, configuration, and data into a single package, defined by a Modelfile. Ollama is a lightweight, extensible framework for building and running language models on the local machine. It provides a simple API for creating, running, and managing models, as well as a library of pre-built models that can be easily used in a variety of applications. It's the best choice to deploy large language models on AIPC locally.
 
 # Prerequisite
-- Install docker by running the following.
+- Install docker by running the following. In WSL, follow the Windows documentation. 
 ```
 curl -fsSL https://get.docker.com -o install_docker.sh
 chmod +x ./install_docker.sh
@@ -17,8 +17,8 @@ newgrp docker
 
 - Navigate to docker-compose.yml directory. 
 ```
-cd opea-comps/ollama/deployments
-LLM_ENDPOINT_PORT=8008 LLM_MODEL_ID="llama3.2:1b" host_ip=172.17.0.1 docker compose up
+cd opea-comps/ollama/deployment
+LLM_ENDPOINT_PORT=8008 LLM_MODEL_ID="llama3.2:1b" host_ip=$(hostname -I | awk '{print $1}') docker compose up
 ```
 
 - Pull the model first in the Ollama server by running

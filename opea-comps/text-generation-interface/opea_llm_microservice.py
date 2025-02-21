@@ -5,20 +5,31 @@ import os
 import time
 from typing import Union
 
-from comps import (
-    CustomLogger,
+
+from cores.mega.logger import CustomLogger
+from cores.common.component import OpeaComponent, OpeaComponentRegistry, OpeaComponentLoader
+from cores.proto.docarray import (
     LLMParamsDoc,
-    OpeaComponentLoader,
     SearchedDoc,
+)
+
+from cores.mega.constants import (
     ServiceType,
-    opea_microservices,
-    register_microservice,
+)
+
+from cores.mega.orchestrator import ServiceOrchestrator
+from cores.mega.orchestrator_with_yaml import ServiceOrchestratorWithYaml
+from cores.mega.micro_service import MicroService, register_microservice, opea_microservices
+
+from cores.telemetry.opea_telemetry import opea_telemetry
+
+from cores.mega.base_statistics import (
     register_statistics,
     statistics_dict,
 )
 
-from comps.cores.proto.api_protocol import ChatCompletionRequest
-from comps.cores.telemetry.opea_telemetry import opea_telemetry
+from cores.proto.api_protocol import ChatCompletionRequest
+from cores.telemetry.opea_telemetry import opea_telemetry
 
 logger = CustomLogger("llm")
 logflag = os.getenv("LOGFLAG", False)
@@ -32,7 +43,7 @@ if llm_component_name == "OpeaTextGenNative":
 elif llm_component_name == "OpeaTextGenBedrock":
     from integrations.bedrock import OpeaTextGenBedrock
 else:
-    from integrations.predictionguard import OpeaTextGenPredictionguard
+    from integrations.prediction_guard import OpeaTextGenPredictionguard
     from integrations.service import OpeaTextGenService
 
 # Initialize OpeaComponentLoader

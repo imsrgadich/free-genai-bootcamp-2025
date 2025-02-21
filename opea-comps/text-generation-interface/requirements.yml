@@ -8,4 +8,12 @@ opentelemetry-exporter-otlp
 opentelemetry-sdk
 shortuuid
 uvicorn
-opea-comps
+prometheus-client
+aiohttp
+pydantic
+prometheus_fastapi_instrumentator
+predictionguard
+boto3
+botocore
+torch
+openai
