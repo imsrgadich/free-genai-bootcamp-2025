@@ -1,0 +1,47 @@
+---
+description: A language learning school wants to build a prototype of learning portal which will act as three things: - Inventory of possible vocabulary that can be learned - Act as a Learning record store (LRS), providing correct and wrong score on practice vocabulary - A unified launchpad to launch different learning apps
+globs: /lang-portal/backend-flask/*
+---
+# 3 Essential Rules for Junior Developers Writing Flask Applications
+
+1. **Always Use Application Factories**
+   - Create your Flask app using a factory function
+   - This makes testing easier and prevents circular imports
+   - Example:
+   ```python
+   def create_app():
+       app = Flask(__name__)
+       # configure your app
+       return app
+   ```
+
+2. **Structure Your Project Properly**
+   - Use blueprints to organize related routes
+   - Keep configuration in separate files
+   - Follow this basic structure:
+   ```
+   my_flask_app/
+   ├── app/
+   │   ├── __init__.py
+   │   ├── models/
+   │   ├── views/
+   │   └── templates/
+   ├── config.py
+   ├── requirements.txt
+   └── run.py
+   ```
+
+3. **Handle Errors Gracefully**
+   - Always implement error handlers
+   - Log errors properly
+   - Return user-friendly error messages
+   ```python
+   @app.errorhandler(404)
+   def not_found_error(error):
+       return render_template('404.html'), 404
+
+   @app.errorhandler(500)
+   def internal_error(error):
+       db.session.rollback()  # If using a database
+       return render_template('500.html'), 500
+   ``` 
