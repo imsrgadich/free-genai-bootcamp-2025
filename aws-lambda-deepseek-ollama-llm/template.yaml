@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Deploy a containerized Lambda function using AWS CloudFormation
+
+Parameters:
+  FunctionName:
+    Type: String
+    Default: "OllamaLambdaFunction"
+    Description: "Name of the Lambda function"
+
+  ImageUri:
+    Type: String
+    Description: "ECR Image URI for the Lambda function"
+
+  MemorySize:
+    Type: Number
+    Default: 3008
+    Description: "Memory size for the Lambda function (in MB)"
+    MinValue: 128
+    MaxValue: 3008
+
+  Timeout:
+    Type: Number
+    Default: 300
+    Description: "Lambda execution timeout in seconds"
+
+  EphemeralStorageSize:
+    Type: Number
+    Default: 10240
+    Description: "Ephemeral storage size for the Lambda function (in MB)"
+
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${FunctionName}-ExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaBasicExecution
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+        - PolicyName: ECRAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetRepositoryPolicy
+                  - ecr:DescribeRepositories
+                  - ecr:ListImages
+                  - ecr:DescribeImages
+                Resource: 
+                  - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/*"
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource: "*"
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref FunctionName
+      Role: !GetAtt LambdaExecutionRole.Arn
+      PackageType: Image
+      Code:
+        ImageUri: !Ref ImageUri
+      MemorySize: !Ref MemorySize
+      Timeout: !Ref Timeout
+      EphemeralStorage:
+        Size: !Ref EphemeralStorageSize
+
+Outputs:
+  FunctionName:
+    Description: "Lambda function name"
+    Value: !Ref LambdaFunction
+
+  FunctionArn:
+    Description: "Lambda function ARN"
+    Value: !GetAtt LambdaFunction.Arn
