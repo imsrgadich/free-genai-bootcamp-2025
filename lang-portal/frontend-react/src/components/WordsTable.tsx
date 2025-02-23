@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom'
 import { ChevronUp, ChevronDown } from 'lucide-react'
 import { Word } from '../services/api'
 
-export type WordSortKey = 'kanji' | 'romaji' | 'english' | 'correct_count' | 'wrong_count'
+export type WordSortKey = 
+  | 'word_hindi_text'
+  | 'word_english_text'
+  | 'word_meaning'
+  | 'word_part_of_speech'
+  | 'correct_count'
+  | 'wrong_count';
 
 interface WordsTableProps {
   words: Word[]
@@ -18,7 +24,7 @@ export default function WordsTable({ words, sortKey, sortDirection, onSort }: Wo
       <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead className="bg-gray-50 dark:bg-gray-900">
           <tr>
-            {(['kanji', 'romaji', 'english', 'correct_count', 'wrong_count'] as const).map((key) => (
+            {(['word_hindi_text', 'word_english_text', 'word_meaning', 'correct_count', 'wrong_count'] as const).map((key) => (
               <th
                 key={key}
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -40,26 +46,26 @@ export default function WordsTable({ words, sortKey, sortDirection, onSort }: Wo
         </thead>
         <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
           {words.map((word) => (
-            <tr key={word.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <tr key={word.word_id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
               <td className="px-6 py-4 whitespace-nowrap">
                 <Link
-                  to={`/words/${word.id}`}
+                  to={`/words/${word.word_id}`}
                   className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  {word.kanji}
+                  {word.word_hindi_text}
                 </Link>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                {word.romaji}
+                {word.word_english_text}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                {word.english}
+                {word.word_meaning}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-green-500 dark:text-green-400">
-                {word.correct_count}
+                {word.word_part_of_speech}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500 dark:text-red-400">
-                {word.wrong_count}
+                {word.word_meaning}
               </td>
             </tr>
           ))}

@@ -43,13 +43,13 @@ Get words from a specific group (This is intended to be used by target apps)
   - `sort_by`: Sort field ('name', 'words_count') (default: 'name')
   - `order`: Sort order ('asc' or 'desc') (default: 'asc')
 
-#### POST /study_sessions
+#### POST /studysessions
 Create a new study session for a group
 - **Parameters:**
   - `group_id`: ID of the group to study (required)
   - `study_activity_id`: ID of the study activity (required)
 
-#### POST /study_sessions/:id/review
+#### POST /study-sessions/:id/review
 Log a review attempt for a word during a study session
 
 ### Database Schema 
@@ -114,3 +114,13 @@ Tracks individual word reviews within study sessions.
 ### Home Challenge
 - Level 1: reimplement the missing API endpoints
 - Level 5: rebuild the entire thing from scratch with whatever you want.
+
+## Technical uncertainty
+
+### Backend implementation
+- Reimplemented the backend in Python using FastAPI. 
+- Used SQLite3 for the database.
+- I used Cursor IDE with "claude 3.5 sonnet" to write the code.
+- Once I had the technical specs, coding with Cursor was a breeze.
+- Had no clear understanding of how frontend will communicate with the backend.
+

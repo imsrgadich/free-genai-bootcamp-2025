@@ -60,18 +60,28 @@ export default function WordShow() {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         <div className="p-6 space-y-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Japanese</h2>
-            <p className="mt-1 text-3xl text-gray-600 dark:text-gray-300">{word.kanji}</p>
-          </div>
-
-          <div>
-            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Romaji</h2>
-            <p className="mt-1 text-xl text-gray-600 dark:text-gray-300">{word.romaji}</p>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Hindi</h2>
+            <p className="mt-1 text-3xl text-gray-600 dark:text-gray-300">{word.word_hindi_text}</p>
           </div>
 
           <div>
             <h2 className="text-lg font-semibold text-gray-800 dark:text-white">English</h2>
-            <p className="mt-1 text-xl text-gray-600 dark:text-gray-300">{word.english}</p>
+            <p className="mt-1 text-xl text-gray-600 dark:text-gray-300">{word.word_english_text}</p>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Meaning</h2>
+            <p className="mt-1 text-xl text-gray-600 dark:text-gray-300">{word.word_meaning}</p>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Origin</h2>
+            <p className="mt-1 text-xl text-gray-600 dark:text-gray-300">{word.word_origin}</p>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Example Sentence</h2>
+            <p className="mt-1 text-xl text-gray-600 dark:text-gray-300">{word.example_sentence}</p>
           </div>
 
           <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -88,11 +98,11 @@ export default function WordShow() {
             </div>
           </div>
 
-          {word.groups && word.groups.length > 0 && (
+          {word.word_groups && word.word_groups.length > 0 && (
             <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Word Groups</h2>
               <div className="mt-2 flex flex-wrap gap-2">
-                {word.groups.map(group => (
+                {word.word_groups.map(group => (
                   <Link
                     key={group.id}
                     to={`/groups/${group.id}`}

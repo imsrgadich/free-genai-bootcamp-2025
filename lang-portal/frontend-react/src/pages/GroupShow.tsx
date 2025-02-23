@@ -4,15 +4,15 @@ import {
   fetchGroupDetails, 
   fetchGroupStudySessions, 
   fetchGroupWords,
-  type GroupDetails, 
-  type StudySession,
-  type StudySessionSortKey,
-  type Word 
+  GroupDetails, 
+  StudySession,
+  Word 
 } from '../services/api'
 import WordsTable, { type WordSortKey } from '../components/WordsTable'
 import StudySessionsTable from '../components/StudySessionsTable'
 import Pagination from '../components/Pagination'
 import { useNavigation } from '../context/NavigationContext'
+import { StudySessionSortKey } from '@/components/StudySessionsTable'
 
 export default function GroupShow() {
   const { id } = useParams<{ id: string }>()
@@ -20,9 +20,9 @@ export default function GroupShow() {
   const { setCurrentGroup } = useNavigation()
   const [words, setWords] = useState<Word[]>([])
   const [studySessions, setStudySessions] = useState<StudySession[]>([])
-  const [wordSortKey, setWordSortKey] = useState<WordSortKey>('kanji')
+  const [wordSortKey, setWordSortKey] = useState<WordSortKey>('word_hindi_text')
   const [wordSortDirection, setWordSortDirection] = useState<'asc' | 'desc'>('asc')
-  const [sessionSortKey, setSessionSortKey] = useState<StudySessionSortKey>('startTime')
+  const [sessionSortKey, setSessionSortKey] = useState<StudySessionSortKey>('id')
   const [sessionSortDirection, setSessionSortDirection] = useState<'asc' | 'desc'>('desc')
   const [wordsPage, setWordsPage] = useState(1)
   const [sessionsPage, setSessionsPage] = useState(1)

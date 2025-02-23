@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useNavigation } from '@/context/NavigationContext'
-import WordsTable from '@/components/WordsTable'
+import { useState, useEffect } from 'react'
+import WordsTable, { WordSortKey } from '@/components/WordsTable'
 import Pagination from '@/components/Pagination'
-import type { Word, WordSortKey } from '@/services/api'
+import type { Word } from '@/services/api'
 
 interface StudySession {
   id: number
@@ -31,7 +30,7 @@ export default function StudySessionShow() {
   const [words, setWords] = useState<Word[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const [sortKey, setSortKey] = useState<WordSortKey>('kanji')
+  const [sortKey, setSortKey] = useState<WordSortKey>('word_hindi_text')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -44,7 +43,7 @@ export default function StudySessionShow() {
       setError(null)
       try {
         const response = await fetch(
-          `http://localhost:5000/api/study-sessions/${id}?page=${currentPage}&per_page=10`
+          `http://localhost:8000/api/study-sessions/${id}?page=${currentPage}&per_page=10`
         )
         if (!response.ok) {
           throw new Error('Failed to fetch session data')
@@ -106,34 +105,7 @@ export default function StudySessionShow() {
               {session.group_name}
             </Link>
           </div>
-          <div>
-            <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">Start Time</h2>
-            <p className="text-gray-900 dark:text-gray-100">{session.start_time}</p>
-          </div>
-          <div>
-            <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">Review Items</h2>
-            <p className="text-gray-900 dark:text-gray-100">{session.review_items_count}</p>
-          </div>
         </div>
-      </div>
-
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Words Reviewed</h2>
-        <WordsTable
-          words={words}
-          sortKey={sortKey}
-          sortDirection={sortDirection}
-          onSort={handleSort}
-        />
-        {totalPages > 1 && (
-          <div className="mt-4">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
-        )}
       </div>
     </div>
   )

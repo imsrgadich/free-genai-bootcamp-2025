@@ -1,6 +1,27 @@
 # React + TypeScript + Vite
 
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) (which includes npm) must be installed on your system
+- To check if you have Node.js installed, run: `node --version`
+- To check if you have npm installed, run: `npm --version`
+
+## Running the Application
+
+1. Install dependencies:
+```
+npm install
+```
+
+2. Start the development server:
+```
+npm run dev
+```
+
+The application will start running on `http://localhost:5173` by default.
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+## Plugins
 
 Currently, two official plugins are available:
 
@@ -24,7 +45,6 @@ export default tseslint.config({
   },
 })
 ```
-
 - Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
 - Optionally add `...tseslint.configs.stylisticTypeChecked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
@@ -48,3 +68,4 @@ export default tseslint.config({
   },
 })
 ```
+

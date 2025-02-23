@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://localhost:8000';
 
 // Group types
 export interface Group {
@@ -20,13 +20,11 @@ export interface WordGroup {
 }
 
 export interface Word {
-  id: number;
-  kanji: string;
-  romaji: string;
-  english: string;
-  correct_count: number;
-  wrong_count: number;
-  groups: WordGroup[];
+  word_id: number;
+  word_hindi_text: string;
+  word_english_text: string;
+  word_meaning: string;
+  word_part_of_speech: string;
 }
 
 export interface WordResponse {
@@ -77,6 +75,29 @@ export interface StudyStats {
   current_streak: number;
 }
 
+// Add this type export
+export type StudySessionSortKey = 'study_session_id' | 'activity_name' | 'group_name' | 'start_time' | 'end_time' | 'review_items_count';
+
+// Add default headers to all fetch requests
+const fetchWithHeaders = async (url: string, options: RequestInit = {}) => {
+  const response = await fetch(url, {
+    ...options,
+    mode: 'cors',
+    credentials: 'omit',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      ...options.headers,
+    },
+  });
+  if (!response.ok) {
+    const error = await response.text();
+    console.error('API Error:', error);
+    throw new Error(error || response.statusText);
+  }
+  return response.json();
+};
+
 // Group API
 export const fetchGroups = async (
   page: number = 1,
@@ -84,7 +105,7 @@ export const fetchGroups = async (
   order: 'asc' | 'desc' = 'asc'
 ): Promise<GroupsResponse> => {
   const response = await fetch(
-    `${API_BASE_URL}/groups?page=${page}&sort_by=${sortBy}&order=${order}`
+    `${API_BASE_URL}/api/groups?page=${page}&sort_by=${sortBy}&order=${order}`
   );
   if (!response.ok) {
     throw new Error('Failed to fetch groups');
@@ -107,7 +128,7 @@ export interface GroupWordsResponse {
 export const fetchGroupDetails = async (
   groupId: number,
   page: number = 1,
-  sortBy: string = 'kanji',
+  sortBy: string = 'word_hindi_text',
   order: 'asc' | 'desc' = 'asc'
 ): Promise<GroupDetails> => {
   const response = await fetch(`${API_BASE_URL}/groups/${groupId}`);
@@ -120,7 +141,7 @@ export const fetchGroupDetails = async (
 export const fetchGroupWords = async (
   groupId: number,
   page: number = 1,
-  sortBy: string = 'kanji',
+  sortBy: string = 'word_hindi_text',
   order: 'asc' | 'desc' = 'asc'
 ): Promise<GroupWordsResponse> => {
   const response = await fetch(
@@ -135,11 +156,11 @@ export const fetchGroupWords = async (
 // Word API
 export const fetchWords = async (
   page: number = 1,
-  sortBy: string = 'kanji',
+  sortBy: string = 'word_hindi_text',
   order: 'asc' | 'desc' = 'asc'
 ): Promise<WordsResponse> => {
   const response = await fetch(
-    `${API_BASE_URL}/words?page=${page}&sort_by=${sortBy}&order=${order}`
+    `${API_BASE_URL}/api/words?page=${page}&sort_by=${sortBy}&order=${order}`
   );
   if (!response.ok) {
     throw new Error('Failed to fetch words');
@@ -161,7 +182,7 @@ export const createStudySession = async (
   groupId: number,
   studyActivityId: number
 ): Promise<{ session_id: number }> => {
-  const response = await fetch(`${API_BASE_URL}/study_sessions`, {
+  const response = await fetch(`${API_BASE_URL}/api/study-sessions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -181,7 +202,7 @@ export const submitStudySessionReview = async (
   sessionId: number,
   reviews: WordReview[]
 ): Promise<void> => {
-  const response = await fetch(`${API_BASE_URL}/study_sessions/${sessionId}/review`, {
+  const response = await fetch(`${API_BASE_URL}/study-sessions/${sessionId}/review`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -227,7 +248,7 @@ export async function fetchGroupStudySessions(
   order: 'asc' | 'desc' = 'desc'
 ): Promise<StudySessionsResponse> {
   const response = await fetch(
-    `${API_BASE_URL}/groups/${groupId}/study_sessions?page=${page}&sort_by=${sortBy}&order=${order}`
+    `${API_BASE_URL}/groups/${groupId}/study-sessions?page=${page}&sort_by=${sortBy}&order=${order}`
   );
   if (!response.ok) {
     throw new Error('Failed to fetch group study sessions');
@@ -237,19 +258,24 @@ export async function fetchGroupStudySessions(
 
 // Dashboard API
 export const fetchRecentStudySession = async (): Promise<RecentSession | null> => {
-  const response = await fetch(`${API_BASE_URL}/dashboard/recent-session`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch recent session');
-  }
-  const data = await response.json();
-  console.log('Raw response from recent session:', data);
-  return data;
+  return fetchWithHeaders(`${API_BASE_URL}/dashboard/recent-session`);
 };
 
 export const fetchStudyStats = async (): Promise<StudyStats> => {
-  const response = await fetch(`${API_BASE_URL}/dashboard/stats`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch study stats');
+  return fetchWithHeaders(`${API_BASE_URL}/dashboard/stats`);
+};
+
+// Update your API calls to use fetchWithHeaders
+export const fetchStudyActivities = async () => {
+  try {
+    return await fetchWithHeaders(`${API_BASE_URL}/api/study-activities`);
+  } catch (error) {
+    console.error('Error fetching study activities:', error);
+    throw error;
   }
-  return response.json();
+};
+
+// Use fetchWithHeaders for health check
+export const checkHealth = async () => {
+  return fetchWithHeaders(`${API_BASE_URL}/health`);
 };
