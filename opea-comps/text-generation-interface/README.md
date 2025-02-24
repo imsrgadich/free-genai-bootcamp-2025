@@ -82,9 +82,9 @@ docker run \
 
 To verify the microservice:
 
-You can set the following model parameters according to your actual needs, such as max_tokens, stream.
+You can set the following model parameters according to your actual needs, such as `max_tokens`, `stream`.
 
-The stream parameter determines the format of the data returned by the API. It will return text string with stream=false, return text stream flow with stream=true.
+The stream parameter determines the format of the data returned by the API. It will return text string with `stream=false`, return text stream flow with `stream=true`.
 
  ```
  # stream mode
