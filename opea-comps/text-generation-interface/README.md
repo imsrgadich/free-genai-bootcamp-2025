@@ -105,3 +105,8 @@ curl http://${host_ip}:${TEXTGEN_PORT}/v1/chat/completions \
     -H 'Content-Type: application/json'
  ```
 
+ ## Technical uncertainty
+ - How to use `PredictionGuard`?
+ - How to run the `MegaService`?
+ 
+
