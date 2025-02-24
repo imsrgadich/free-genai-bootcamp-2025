@@ -5,6 +5,17 @@ A prerequisite for using this microservice is that users must have a LLM text ge
 
 Overall, this microservice offers a streamlined way to integrate large language model inference into applications, requiring minimal setup from the user beyond initiating a TGI/vLLM service and configuring the necessary environment variables. This allows for the seamless processing of queries and documents to generate intelligent, context-aware responses.
 
+## Prerequisite
+- Install docker by running the following. In WSL, follow the Windows documentation. 
+```
+curl -fsSL https://get.docker.com -o install_docker.sh
+chmod +x ./install_docker.sh
+./install_docker.sh
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
 ## Implementation
 - Create the conda virtual environment and activate it.
 ```
