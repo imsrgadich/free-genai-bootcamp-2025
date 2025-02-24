@@ -133,3 +133,19 @@ docker logs -f <container_id>
 # Kubernetes logs
 kubectl logs -f deployment/lang-portal-api
 ```
+
+## Running Tests
+
+1. **Install the dependencies:**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Run the tests:**
+
+   ```bash
+   pytest tests/
+   ```
+
+This will execute all the test cases in the `tests` directory and provide a summary of the results.
