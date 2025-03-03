@@ -57,9 +57,71 @@ To run the app in development mode with auto-reload:
 streamlit run app.py --server.runOnSave=true
 ```
 
+## AWS Bedrock Setup
+
+### Prerequisites
+1. **AWS Account**: Ensure you have an AWS account with Bedrock access
+2. **AWS CLI**: Install AWS CLI on your machine
+3. **Python**: Python 3.8+ with pip installed
+
+### Configuration Steps
+
+1. **Configure AWS Credentials**
+   ```bash
+   aws configure
+   ```
+   Enter your credentials when prompted:
+   - AWS Access Key ID
+   - AWS Secret Access Key
+   - Default region (e.g., us-east-1)
+   - Output format (json)
+
+2. **Install Required Packages**
+   ```bash
+   pip install boto3 python-dotenv
+   ```
+
+3. **Environment Setup**
+   Create a `.env` file in project root:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. **Update Environment Variables**
+   ```ini
+   AWS_ACCESS_KEY_ID=your_access_key
+   AWS_SECRET_ACCESS_KEY=your_secret_key
+   AWS_REGION=us-east-1
+   BEDROCK_MODEL_ID=amazon.titan-text-express-v1 // <use model of your own choice>
+   ```
+
+### Usage Example
+```python
+import boto3
+
+bedrock_runtime = boto3.client(
+    service_name='bedrock-runtime',
+    region_name='us-east-1'  # specify your region
+)
+
+# Example request body for Claude model
+request = {
+    "prompt": "Hello, how are you?",
+    "max_tokens_to_sample": 300,
+    "temperature": 0.5,
+    "top_p": 1
+}
+
+response = bedrock_runtime.invoke_model(
+    modelId='anthropic.claude-v2',  # or your chosen model
+    body=json.dumps(request)
+)
+```
+
 ## Technical Requirements
 - **YouTube Transcript API**: For downloading transcripts from YouTube videos.
 - **Sqlite3**: To serve as a knowledge base for storing and retrieving data.
+- **AWS Bedrock**: For AI/ML capabilities using Amazon's foundation models.
 - **AI Coding Assistant**: Tools like Amazon Developer Q, Windsurf, Cursor, or GitHub Copilot for development assistance.
 - **Guardrails**: Implementing safety measures to ensure the app operates within defined parameters.
 
