@@ -1,6 +1,8 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from typing import Optional, List, Dict
-
+import re
+from urllib.parse import parse_qs, urlparse
+import requests
 
 class YouTubeTranscriptDownloader:
     def __init__(self, languages: List[str] = ["hi", "en"]):
@@ -21,6 +23,64 @@ class YouTubeTranscriptDownloader:
         elif "youtu.be/" in url:
             return url.split("youtu.be/")[1][:11]
         return None
+
+    def extract_playlist_id(self, url: str) -> Optional[str]:
+        """
+        Extract playlist ID from YouTube URL
+        
+        Args:
+            url (str): YouTube playlist URL
+            
+        Returns:
+            Optional[str]: Playlist ID if found, None otherwise
+        """
+        if "list=" in url:
+            parsed_url = urlparse(url)
+            return parse_qs(parsed_url.query)['list'][0]
+        return None
+
+    def get_playlist_video_ids(self, playlist_url: str) -> List[str]:
+        """
+        Get all video IDs from a playlist
+        
+        Args:
+            playlist_url (str): YouTube playlist URL
+            
+        Returns:
+            List[str]: List of video IDs
+        """
+        playlist_id = self.extract_playlist_id(playlist_url)
+        if not playlist_id:
+            print("Invalid playlist URL")
+            return []
+
+        # Use YouTube Data API to get playlist items
+        # Note: You need to set up YouTube Data API and get an API key
+        api_key = "YOUR_YOUTUBE_API_KEY"  # Replace with your API key
+        url = f"https://www.googleapis.com/youtube/v3/playlistItems"
+        
+        video_ids = []
+        next_page_token = None
+        
+        while True:
+            params = {
+                'part': 'contentDetails',
+                'playlistId': playlist_id,
+                'maxResults': 50,
+                'pageToken': next_page_token,
+                'key': api_key
+            }
+            
+            response = requests.get(url, params=params).json()
+            
+            for item in response['items']:
+                video_ids.append(item['contentDetails']['videoId'])
+            
+            next_page_token = response.get('nextPageToken')
+            if not next_page_token:
+                break
+                
+        return video_ids
 
     def get_transcript(self, video_id: str) -> Optional[List[Dict]]:
         """
@@ -70,29 +130,67 @@ class YouTubeTranscriptDownloader:
             print(f"Error saving transcript: {str(e)}")
             return False
 
-def main(video_url, print_transcript=False):
-    # Initialize downloader
+    def download_playlist_transcripts(self, playlist_url: str, print_transcript: bool = False) -> Dict[str, bool]:
+        """
+        Download transcripts for all videos in a playlist
+        
+        Args:
+            playlist_url (str): YouTube playlist URL
+            print_transcript (bool): Whether to print transcripts
+            
+        Returns:
+            Dict[str, bool]: Dictionary of video IDs and their download status
+        """
+        video_ids = self.get_playlist_video_ids(playlist_url)
+        results = {}
+        
+        for video_id in video_ids:
+            transcript = self.get_transcript(video_id)
+            if transcript:
+                success = self.save_transcript(transcript, video_id)
+                results[video_id] = success
+                if success and print_transcript:
+                    print(f"\nTranscript for video {video_id}:")
+                    for entry in transcript:
+                        print(f"{entry['text']}")
+            else:
+                results[video_id] = False
+                
+        return results
+
+def main(url: str, print_transcript: bool = False):
     downloader = YouTubeTranscriptDownloader()
     
-    # Get transcript
-    transcript = downloader.get_transcript(video_url)
-    downloader.save_transcript(transcript, video_url)
-    if transcript:
-        # Save transcript
-        video_id = downloader.extract_video_id(video_url)
-        if downloader.save_transcript(transcript, video_id):
-            print(f"Transcript saved successfully to {video_id}.txt")
-            #Print transcript if True
-            if print_transcript:
-                # Print transcript
-                for entry in transcript:
-                    print(f"{entry['text']}")
-        else:
-            print("Failed to save transcript")
-        
+    if "list=" in url:
+        # Handle playlist
+        results = downloader.download_playlist_transcripts(url, print_transcript)
+        for video_id, success in results.items():
+            status = "successfully" if success else "failed to"
+            print(f"Video {video_id} {status} download transcript")
     else:
-        print("Failed to get transcript")
+        # Handle single video
+        downloader = YouTubeTranscriptDownloader()
+    
+        # Get transcript
+        transcript = downloader.get_transcript(url)
+        downloader.save_transcript(transcript, url)
+        if transcript:
+            # Save transcript
+            video_id = downloader.extract_video_id(url)
+            if downloader.save_transcript(transcript, video_id):
+                print(f"Transcript saved successfully to {video_id}.txt")
+                #Print transcript if True
+                if print_transcript:
+                    # Print transcript
+                    for entry in transcript:
+                        print(f"{entry['text']}")
+            else:
+                print("Failed to save transcript")
+        
+        else:
+            print("Failed to get transcript")
 
 if __name__ == "__main__":
-    video_id = "https://www.youtube.com/watch?v=RZC33SMlAYE"  # Extract from URL: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    transcript = main(video_id, print_transcript=True)
+    # Example usage for playlist
+    playlist_url = "https://www.youtube.com/playlist?list=PL3SQxlU5xkuBuUMKXZYv__f4IToDZi1Dm"
+    main(playlist_url, print_transcript=True)
