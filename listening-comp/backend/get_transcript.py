@@ -1,12 +1,29 @@
+import os
+from dotenv import load_dotenv
 from youtube_transcript_api import YouTubeTranscriptApi
 from typing import Optional, List, Dict
 import re
 from urllib.parse import parse_qs, urlparse
 import requests
+import json
+
+# Add this at the top of the script for detailed logging
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Load environment variables
+load_dotenv()
 
 class YouTubeTranscriptDownloader:
     def __init__(self, languages: List[str] = ["hi", "en"]):
         self.languages = languages
+        self.api_key = os.getenv('YOUTUBE_API_KEY')
+        
+        if not self.api_key:
+            raise ValueError("YouTube API key is required")
+            
+        # Initialize session without OAuth headers
+        self.session = requests.Session()
 
     def extract_video_id(self, url: str) -> Optional[str]:
         """
@@ -40,47 +57,55 @@ class YouTubeTranscriptDownloader:
         return None
 
     def get_playlist_video_ids(self, playlist_url: str) -> List[str]:
-        """
-        Get all video IDs from a playlist
-        
-        Args:
-            playlist_url (str): YouTube playlist URL
-            
-        Returns:
-            List[str]: List of video IDs
-        """
+        """Get video IDs from a YouTube playlist using API key only"""
         playlist_id = self.extract_playlist_id(playlist_url)
         if not playlist_id:
             print("Invalid playlist URL")
             return []
 
-        # Use YouTube Data API to get playlist items
-        # Note: You need to set up YouTube Data API and get an API key
-        api_key = "YOUR_YOUTUBE_API_KEY"  # Replace with your API key
-        url = f"https://www.googleapis.com/youtube/v3/playlistItems"
-        
+        url = "https://youtube.googleapis.com/youtube/v3/playlistItems"
         video_ids = []
-        next_page_token = None
-        
-        while True:
-            params = {
-                'part': 'contentDetails',
-                'playlistId': playlist_id,
-                'maxResults': 50,
-                'pageToken': next_page_token,
-                'key': api_key
-            }
-            
-            response = requests.get(url, params=params).json()
-            
-            for item in response['items']:
-                video_ids.append(item['contentDetails']['videoId'])
-            
-            next_page_token = response.get('nextPageToken')
-            if not next_page_token:
-                break
+        page_token = None
+
+        try:
+            while True:
+                params = {
+                    'part': 'contentDetails',
+                    'playlistId': playlist_id,
+                    'maxResults': 50,
+                    'key': self.api_key
+                }
                 
-        return video_ids
+                if page_token:
+                    params['pageToken'] = page_token
+
+                response = self.session.get(
+                    url,
+                    params=params,
+                    timeout=10
+                )
+                
+                response.raise_for_status()
+                data = response.json()
+
+                # Extract video IDs
+                for item in data.get('items', []):
+                    if 'contentDetails' in item and 'videoId' in item['contentDetails']:
+                        video_ids.append(item['contentDetails']['videoId'])
+
+                page_token = data.get('nextPageToken')
+                if not page_token:
+                    break
+
+                time.sleep(1)  # Rate limiting
+
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {str(e)}")
+            if hasattr(e.response, 'text'):
+                print(f"Response: {e.response.text}")
+            return []
+
+        return list(set(video_ids))
 
     def get_transcript(self, video_id: str) -> Optional[List[Dict]]:
         """
