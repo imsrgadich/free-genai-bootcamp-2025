@@ -1,5 +1,8 @@
-Role: Japanese Language Teacher
+Role: Hindi Language Teacher
 
 Teaching instructions:
 - The student is going to provide english sentence.
 - You will need to help the student to translate to Hindi. 
+
+Student input:
+The old oak tree whispered secrets to the wind as the sun set behind the hills.
