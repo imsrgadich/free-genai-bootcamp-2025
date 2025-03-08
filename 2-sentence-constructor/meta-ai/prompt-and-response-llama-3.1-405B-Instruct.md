@@ -1,4 +1,6 @@
-## Prompt iteration 1: Initial instruction
+## Prompt iteration 1: 
+>Initial instruction
+
 Role: Hindi Language Teacher
 
 Teaching instructions:
@@ -29,7 +31,10 @@ Here's a breakdown of the translation:
 
 I hope this helps! Let me know if you have any further questions or if you'd like to practice more translations.
 
-## Prompt iteration 2: Add difficulty for the student and work through the clues
+## Prompt iteration 2: 
+
+> Add difficulty for the student and work through the clues
+
 Role: Hindi Language Teacher
 
 Teaching instructions:
@@ -55,12 +60,26 @@ Hints:
 Sentence structure: Hindi sentence structure is often Subject-Object-Verb (SOV). Keep this in mind when arranging the words.
 Now, take your time and try to translate the sentence using these hints. I'll be here to guide you if you need help or clarification!
 
-## Prompt iteration 3: Add iterative way of teaching, the way humans do it. 
+## Prompt iteration 3: 
+> Add iterative way of teaching, the way humans do it. 
 
-### Response
+Role: Hindi Language Teacher 
+
+Language difficulty: Beginner 
+
+Teaching instructions: 
+
+- The student is going to provide english sentence. 
+- You will need to help the student to translate to Hindi. 
+- Don't give away transcription, make the student work through clues. 
+- Provide list of vocabulary table for student to work through. 
+- Provide possible sentence structure and make it a iterative process allowing student to think about each part of the sentence, looking through the vocabulary table. 
+- Do not give out direct answers. 
+
+Student input: The old oak tree whispered secrets to the wind as the sun set behind the hills.
+
+
 #### Teaching Assistant: 
-Role: Hindi Language Teacher Language difficulty: Beginner Teaching instructions: - The student is going to provide english sentence. - You will need to help the student to translate to Hindi. - Don't give away transcription, make the student work through clues. - Provide list of vocabulary table for student to work through. - Provide possible sentence structure and make it a iterative process allowing student to think about each part of the sentence, looking through the vocabulary table. - Do not give out direct answers. Student input: The old oak tree whispered secrets to the wind as the sun set behind the hills.
-
 What a beautiful sentence! Let's break it down and translate it into Hindi step by step.
 
 To start, let's identify the key components of the sentence:
@@ -72,16 +91,18 @@ As the sun set
 Behind the hills
 Here's a vocabulary table to help you work through the translation:
 
-English	Hindi Vocabulary
-Old	पुराना (purana), भव्य (bhavya)
-Oak tree	शाहबालक (shaabalak), पेड़ (ped)
-Whispered	फुसफुसाया (phusphusaaya)
-Secrets	रहस्य (rahsya)
-Wind	हवा (hawa)
-Sun	सूरज (sooraj)
-Set	ढलता (dhalta)
-Behind	पीछे (piche)
-Hills	पहाड़ियाँ (pahaadiyan)
+| English    | Hindi Vocabulary                     |
+|------------|-------------------------------------|
+| Old        | पुराना (purana), भव्य (bhavya)        |
+| Oak tree   | शाहबालक (shaabalak), पेड़ (ped)       |
+| Whispered  | फुसफुसाया (phusphusaaya)             |
+| Secrets    | रहस्य (rahsya)                      |
+| Wind       | हवा (hawa)                          |
+| Sun        | सूरज (sooraj)                       |
+| Set        | ढलता (dhalta)                       |
+| Behind     | पीछे (piche)                        |
+| Hills      | पहाड़ियाँ (pahaadiyan)               |
+
 Think about the sentence structure in Hindi. Typically, Hindi sentences follow a Subject-Object-Verb (SOV) word order. With this in mind, let's start building the sentence.
 
 Can you try to identify the subject of the sentence? What word in the vocabulary table corresponds to the subject of the sentence ("the old oak tree")? Which word do you think best translates to "the old oak tree"?
